@@ -6,6 +6,12 @@ describe("Gilded Rose", () => {
   test("foo", () => {
     const gildedRose = new Shop([new Item("foo", 0, 0)]);
     const items = gildedRose.updateQuality();
-    expect(items[0].name).to.equal("foo");
+
+    const expected = ["foo"];
+
+    for (let i = 0; i < items.length; i++) {
+      expect(items[i].name).to.equal(expected[i]);
+      expect(items[i].sellIn).to.equal(-1);
+    }
   });
 });
