@@ -4,22 +4,30 @@ import { Item, Shop } from "../src/gilded_rose.mjs";
 
 describe("Gilded Rose", () => {
   test("foo", () => {
-    const gildedRose = new Shop([
-      new Item("foo", 0, 0),
-      new Item("Backstage passes to a TAFKAL80ETC concert", 0, 0),
-      new Item("Backstage passes to a TAFKAL80ETC concert", 12, 0),
-    ]);
+    const qualities = [-1, 0, 1, 49, 50, 51];
+    const sellIns = [-1, 0, 1, 2, 6, 10, 11];
+    const names = ["foo", "Aged Brie", "Backstage passes to a TAFKAL80ETC concert", "Sulfuras, Hand of Ragnaros"];
+
+    let itemsForShop = [];
+    for (let name of names) {
+      for (let quality of qualities) {
+        for (let sellIn of sellIns) {
+          itemsForShop.push(new Item(name, sellIn, quality));
+        }
+      }
+    }
+
+    const gildedRose = new Shop([...itemsForShop]);
     const items = gildedRose.updateQuality();
 
-    const expected = [
-      { name: "foo", sellIn: -1 },
-      { name: "Backstage passes to a TAFKAL80ETC concert", sellIn: -1 },
-      { name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 11 },
-    ];
+    items.forEach((item) => {
+      expect(item).toMatchSnapshot();
+    });
+  });
 
-    for (let i = 0; i < items.length; i++) {
-      expect(items[i].name).to.equal(expected[i].name);
-      expect(items[i].sellIn).to.equal(expected[i].sellIn);
-    }
+  test("should default to empty items array", () => {
+    const gilderRose = new Shop();
+    const items = gilderRose.updateQuality();
+    expect(items).to.be.an("array").that.is.empty;
   });
 });
