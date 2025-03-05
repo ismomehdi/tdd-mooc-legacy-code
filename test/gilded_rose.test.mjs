@@ -10,14 +10,7 @@ describe("Gilded Rose", () => {
     const sellIns = [-1, 0, 1, 2, 6, 10, 11];
     const names = ["foo", "Aged Brie", "Backstage passes to a TAFKAL80ETC concert", "Sulfuras, Hand of Ragnaros"];
 
-    let itemsForShop = [];
-    for (let name of names) {
-      for (let quality of qualities) {
-        for (let sellIn of sellIns) {
-          itemsForShop.push(new Item(name, sellIn, quality));
-        }
-      }
-    }
+    const itemsForShop = getItemCombinations(names, qualities, sellIns);
 
     const gildedRose = new Shop([...itemsForShop]);
     const items = gildedRose.updateQuality();
@@ -33,7 +26,7 @@ describe("Gilded Rose", () => {
     expect(items).to.be.an("array").that.is.empty;
   });
 
-  test.each([[1], [2], [3], [4], [5], [10], [100], [1000]])(
+  test.each([[0], [1], [2], [3], [4], [5], [10], [100], [1000]])(
     '"Conjured" item degrades by 2 units when quality and sellIn are positive (integer: %i)',
     (positiveInteger) => {
       const gildedRose = new Shop([new Item("Conjured", positiveInteger, positiveInteger)]);
@@ -48,7 +41,7 @@ describe("Gilded Rose", () => {
     expect(items[0].quality).toBe(0);
   });
 
-  test.each([[1], [2], [3], [4], [5], [10], [100], [1000]])(
+  test.each([[0], [1], [2], [3], [4], [5], [10], [100], [1000]])(
     '"Conjured" item degrades by 4 units when quality is positive and sellIn is negative (integer: %i)',
     (positiveInteger) => {
       const gildedRose = new Shop([new Item("Conjured", -positiveInteger, positiveInteger)]);
@@ -56,4 +49,28 @@ describe("Gilded Rose", () => {
       expect(items[0].quality).toBe(Math.max(0, positiveInteger - 4));
     },
   );
+
+  test('"Conjured" item sellIn decreases by 1', () => {
+    const gildedRose = new Shop([new Item("Conjured", 0, 1)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].sellIn).toBe(-1);
+  });
+
+  test('"Conjured" item degrades by 2 when sellIn is 1', () => {
+    const gildedRose = new Shop([new Item("Conjured", 1, 4)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(2);
+  });
 });
+
+function getItemCombinations(names, qualities, sellIns) {
+  let itemsForShop = [];
+  for (let name of names) {
+    for (let quality of qualities) {
+      for (let sellIn of sellIns) {
+        itemsForShop.push(new Item(name, sellIn, quality));
+      }
+    }
+  }
+  return itemsForShop;
+}
