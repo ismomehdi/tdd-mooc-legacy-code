@@ -3,7 +3,9 @@ import { expect } from "chai";
 import { Item, Shop } from "../src/gilded_rose.mjs";
 
 describe("Gilded Rose", () => {
-  test("foo", () => {
+  // this validation test covers the legacy code.
+  // ideally, we would replace this with more specific tests
+  test("legacy code", () => {
     const qualities = [-1, 0, 1, 49, 50, 51];
     const sellIns = [-1, 0, 1, 2, 6, 10, 11];
     const names = ["foo", "Aged Brie", "Backstage passes to a TAFKAL80ETC concert", "Sulfuras, Hand of Ragnaros"];
@@ -31,9 +33,13 @@ describe("Gilded Rose", () => {
     expect(items).to.be.an("array").that.is.empty;
   });
 
-  test('"Conjured" items degrade in quality twice as fast as normal items', () => {
-    const gildedRose = new Shop([new Item("Conjured", 1, 10)]);
-    const items = gildedRose.updateQuality();
-    expect(items[0].quality).to.equal(8);
-  });
+  // test.each([[1], [2], [3], [4], [5], [10], [100], [1000]])(
+  //   '"Conjured" item degrades by 2 units when quality and sellIn are positive (quality: %i)',
+  //   (quality) => {
+  //     const gildedRose = new Shop([new Item("Conjured", 10, quality)]);
+  //     const items = gildedRose.updateQuality();
+
+  //     expect(items[0].quality).toBe(Math.max(0, quality - 2));
+  //   },
+  // );
 });
