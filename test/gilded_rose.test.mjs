@@ -47,4 +47,13 @@ describe("Gilded Rose", () => {
     const items = gildedRose.updateQuality();
     expect(items[0].quality).toBe(0);
   });
+
+  test.each([[1], [2], [3], [4], [5], [10], [100], [1000]])(
+    '"Conjured" item degrades by 4 units when quality is positive and sellIn is negative (integer: %i)',
+    (positiveInteger) => {
+      const gildedRose = new Shop([new Item("Conjured", -positiveInteger, positiveInteger)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).toBe(Math.max(0, positiveInteger - 4));
+    },
+  );
 });
