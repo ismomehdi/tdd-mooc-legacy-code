@@ -12,10 +12,7 @@ export class Shop {
   }
 
   updateQuality() {
-    for (let i = 0; i < this.items.length; i++) {
-      appleSauce(this.items[i]);
-    }
-
+    this.items.forEach((item) => appleSauce(item));
     return this.items;
   }
 }
