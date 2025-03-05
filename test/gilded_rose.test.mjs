@@ -33,13 +33,18 @@ describe("Gilded Rose", () => {
     expect(items).to.be.an("array").that.is.empty;
   });
 
-  // test.each([[1], [2], [3], [4], [5], [10], [100], [1000]])(
-  //   '"Conjured" item degrades by 2 units when quality and sellIn are positive (quality: %i)',
-  //   (quality) => {
-  //     const gildedRose = new Shop([new Item("Conjured", 10, quality)]);
-  //     const items = gildedRose.updateQuality();
+  test.each([[1], [2], [3], [4], [5], [10], [100], [1000]])(
+    '"Conjured" item degrades by 2 units when quality and sellIn are positive (integer: %i)',
+    (positiveInteger) => {
+      const gildedRose = new Shop([new Item("Conjured", positiveInteger, positiveInteger)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).toBe(Math.max(0, positiveInteger - 2));
+    },
+  );
 
-  //     expect(items[0].quality).toBe(Math.max(0, quality - 2));
-  //   },
-  // );
+  test('"Conjured" item does not degrade quality below 0', () => {
+    const gildedRose = new Shop([new Item("Conjured", 0, 0)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(0);
+  });
 });
