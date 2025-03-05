@@ -30,4 +30,10 @@ describe("Gilded Rose", () => {
     const items = gilderRose.updateQuality();
     expect(items).to.be.an("array").that.is.empty;
   });
+
+  test('"Conjured" items degrade in quality twice as fast as normal items', () => {
+    const gildedRose = new Shop([new Item("Conjured", 1, 10)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).to.equal(8);
+  });
 });
